@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slider</title>
+
+    <style>
+        button {
+            background-color: grey;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <button id='btn' onclick="turnOn()">
+            <p>Push Me</p>
+        </button>
+    </main>
+
+    <script>
+        let on = false;
+        const turnOn = () => {
+            let property = document.getElementById('btn');
+            if (on === false) {
+                on = true;
+                console.log(on);
+
+                property.style.backgroundColor = 'green';
+            } else {
+                on = false;
+                console.log(on);
+
+                property.style.backgroundColor = 'grey';
+            }
+        }
+    </script>
+</body>
+</html>
