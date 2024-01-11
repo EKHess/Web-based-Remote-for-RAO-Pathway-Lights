@@ -78,9 +78,9 @@
             overflow: hidden;
         }
 
-            .image-container img {
-                display: block;
-            }
+        .image-container img {
+            display: block;
+        }
 
         body {
             background-color: #FFF8F0;
@@ -100,14 +100,6 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-        }
-
-        @media only screen and (max-height: 670px) {
-            .remote-container {
-                position: absolute;
-                top: 25px;
-                transform: translate(-50%, 0);
-            }
         }
 
         @media only screen and (min-width: 450px) {
@@ -150,6 +142,28 @@
             font-size: 1.25rem;
         }
 
+        .dialogue-container {
+            margin-top: 1rem;
+            margin-left: 1rem;
+            margin-right: 1rem;
+            border: 1px solid #030202;
+            border-radius: 8px;
+            padding: 1rem;
+
+            font-size: 1.25rem;
+        }
+
+        .dialogue-box p {
+            margin: 0 auto;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-top: -1rem;
+        }
+
+        #dialogue-descriptor {
+            width: 5rem;
+        }
+
         .buttons-container {
             font-size: 1.25rem;
             margin: 2rem 1rem 1rem 1rem;
@@ -187,23 +201,28 @@
             all: unset;
             /* background-color: #FFC77D; */
             background: linear-gradient(to left top, #FFC77D, #FCE7CC);
-            color: #030202;
             box-shadow: 0 0.25rem #FF6F00;
         }
 
-            button:focus {
-                outline: revert;
-            }
+        .btn-on {
+            background: linear-gradient(to left top, #ECECEC, #c9c9c9);
+            box-shadow: 0 0.25rem #666656;
+            /* color: #030202; */
+        }
 
-            button.small {
-                flex: 1;
-                height: 6rem;
-                aspect-ratio: 1 / 1;
-                text-align: center;
-                border-radius: 0.75rem;
-                margin-bottom: 0.25rem;
-                font-size: 2.5rem;
-            }
+        button:focus {
+            outline: revert;
+        }
+
+        button.small {
+            flex: 1;
+            height: 6rem;
+            aspect-ratio: 1 / 1;
+            text-align: center;
+            border-radius: 0.75rem;
+            margin-bottom: 0.25rem;
+            font-size: 2.5rem;
+        }
 
         @media only screen and (max-width: 450px) {
             button.small {
@@ -270,10 +289,17 @@
             <!-- Title -->
             <div class="title-container">
                 <div class="title">
-                    <p><span class="standout-text">R</span>emote</p>
+                    <p>RAO</p>
                 </div>
                 <div class="subtitle">
                     <p class="purple">Pathway Lights</p>
+                </div>
+            </div>
+            <!-- Dialog Window -->
+            <div class="dialogue-container">
+                <p class="descriptor" id="dialogue-descriptor">Dialogue</p>
+                <div class="dialogue-box">
+                    <p id="dialogue-txt">Ready</p>
                 </div>
             </div>
             <!-- Buttons -->
@@ -281,19 +307,156 @@
                 <div class="power-container">
                     <p class="descriptor">Power</p>
                     <div class="on-off-container">
-                        <button class="small" type="button" onclick="func1();">On</button>
-                        <button class="small" type="button" onclick="func2();">Off</button>
+                        <button class="small" type="button" onclick="turnOn();" id="on-btn">On</button>
+                        <button class="small" type="button" onclick="turnOff();" id="off-btn">Off</button>
                     </div>
                 </div>
                 <div class="mode-container">
                     <p class="descriptor">Mode</p>
                     <div class="mode-button-container">
-                        <button class="large" type="button" onclick="func3();">Motion Control</button>
-                        <button class="large" type="button" onclick="func4();">All LEDs</button>
+                        <button class="large" type="button" onclick="motionControl();" id="mc-btn">Motion Control</button>
+                        <button class="large" type="button" onclick="allLedControl();" id="al-btn">All LEDs</button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <script>
+        function func1 () {
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", "/update?mode=Mode 1", true);
+          xhttp.send();
+        }
+        function func2 () {
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", "/update?mode=Mode 2", true);
+          xhttp.send();
+        }
+        function func3 () {
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", "/update?mode=Mode 3", true);
+          xhttp.send();
+        }
+        function func4 () {
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", "/update?mode=Mode 4", true);
+          xhttp.send();
+        }
+
+        // The following function toggles a btn's style only if it's 'on' boolean is true.
+
+        // In the below functions turnOn(), turnOff(), motionConrol() and allLedControl(), toggleOnBtnStyle()
+        // is called twice: First when the button is initially pressed. This toggles the style of the btn pressed most recently, who's "on" value is still true.
+        // Then, it executes the btn's code, which flips all "on" booleans to false, except for the btn that
+        //  was just pressed. At the very end, toggleOnBtnStyle() is called one last time to flip the newly 
+        // pressed btn's style  to reflect it's been pressed. 
+        const toggleOnBtnStyle = () => {
+            if (on) {
+                onBtn.classList.toggle('btn-on');
+            } 
+            if (off) {
+                offBtn.classList.toggle('btn-on');
+            } 
+            if (motionOn) {
+                mcBtn.classList.toggle('btn-on');
+            } 
+            if (allLedOn) {
+                alBtn.classList.toggle('btn-on');
+            }
+        }
+
+        let on = false;
+        let off = false;
+        let motionOn = false;
+        let allLedOn = false;
+
+        const onBtn = document.getElementById('on-btn');
+        const offBtn = document.getElementById('off-btn');
+        const mcBtn = document.getElementById('mc-btn');
+        const alBtn = document.getElementById('al-btn');
+        const dialogueTxt = document.getElementById('dialogue-txt');
+
+        const turnOn = () => {
+            dialogueTxt.innerHTML = 'Mode 1';
+
+            // To toggle styling
+            toggleOnBtnStyle();
+
+            console.log('Call func1() and turn on');
+            on = true;
+            off = false;
+            motionOn = false;
+            allLedOn = false;
+
+            onBtn.disabled = true;
+            offBtn.disabled = false;
+            mcBtn.disabled = false;
+            alBtn.disabled = false;
+
+            toggleOnBtnStyle();
+        }
+
+        const turnOff = () => {
+            dialogueTxt.innerHTML = 'Mode 2';
+
+            // To toggle styling
+            toggleOnBtnStyle();
+            
+            console.log('Call func2() and turn off');
+            on = false;
+            off = true;
+            motionOn = false;
+            allLedOn = false;
+
+            onBtn.disabled = false;
+            offBtn.disabled = true;
+            mcBtn.disabled = false;
+            alBtn.disabled = false;
+
+            toggleOnBtnStyle();
+        }
+
+        const motionControl = () => {
+            dialogueTxt.innerHTML = 'Mode 3';
+
+            // To toggle styling
+            toggleOnBtnStyle();
+
+            console.log('Call func3() and switch to mode 3');
+            on = false;
+            off = false;
+            motionOn = true;
+            allLedOn = false;
+
+            onBtn.disabled = false;
+            offBtn.disabled = false;
+            mcBtn.disabled = true;
+            alBtn.disabled = false;
+
+            toggleOnBtnStyle();
+        }
+
+        const allLedControl = () => {
+            dialogueTxt.innerHTML = 'Mode 4';
+
+            // To toggle styling
+            toggleOnBtnStyle();
+
+            console.log('Call func4() and switch to mode 4');
+            on = false;
+            off = false;
+            motionOn = false;
+            allLedOn = true;
+
+            onBtn.disabled = false;
+            offBtn.disabled = false;
+            mcBtn.disabled = false;
+            alBtn.disabled = true;
+
+            toggleOnBtnStyle();
+        }
+
+    </script>
 </body>
 </html>
