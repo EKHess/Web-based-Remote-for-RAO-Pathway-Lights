@@ -11,7 +11,7 @@ Since the remote is web-based, it's compatible with any mobile device.
 Improved dynamic styling would improve the aesthetic of the remote on smaller smart phones. 
 
 ## How To Use
-Try out a copy of the project here: [ekhess.github.io/Web-based-Remote-for-RAO-Pathway-Lights](ekhess.github.io/Web-based-Remote-for-RAO-Pathway-Lights)
+Try out a copy of the project here: [https://ekhess.github.io/Web-based-Remote-for-RAO-Pathway-Lights/](https://ekhess.github.io/Web-based-Remote-for-RAO-Pathway-Lights/)
 
 ## Technologies
 - HTML5
